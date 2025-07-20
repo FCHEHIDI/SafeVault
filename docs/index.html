@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeVault - Cybersecurity Learning Platform</title>
+    <meta name="description" content="Interactive cybersecurity education platform with hands-on security exercises and vulnerability demonstrations">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+            padding: 40px 0;
+        }
+        
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .activities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .activity-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid;
+        }
+        
+        .activity-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .activity1 { border-left-color: #ff6b6b; }
+        .activity2 { border-left-color: #4ecdc4; }
+        .activity3 { border-left-color: #45b7d1; }
+        .activity4 { border-left-color: #96ceb4; }
+        
+        .activity-card h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .activity-card p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .feature-tag {
+            background: #f8f9fa;
+            color: #495057;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid #dee2e6;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #95a5a6, #7f8c8d);
+        }
+        
+        .demo-section {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .demo-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            opacity: 0.8;
+            padding: 30px 0;
+        }
+        
+        .footer a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .warning-banner {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .warning-banner strong {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .activity-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🛡️ SafeVault</h1>
+            <p>Interactive Cybersecurity Learning Platform - Master secure coding through hands-on vulnerability exploration</p>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-number">4</span>
+                    Learning Activities
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">3000+</span>
+                    Lines of Code
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">15+</span>
+                    Security Topics
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">100%</span>
+                    Hands-On Learning
+                </div>
+            </div>
+        </header>
+
+        <div class="warning-banner">
+            <strong>⚠️ Educational Purpose Only</strong>
+            This platform demonstrates real security vulnerabilities for educational purposes. Never use vulnerable code examples in production environments.
+        </div>
+
+        <div class="activities-grid">
+            <div class="activity-card activity1">
+                <h2>🔍 Activity 1: Secure Audit</h2>
+                <p>Learn database security fundamentals, SQL injection prevention, and secure authentication patterns through practical examples.</p>
+                
+                <div class="features">
+                    <span class="feature-tag">SQL Injection</span>
+                    <span class="feature-tag">Database Security</span>
+                    <span class="feature-tag">Authentication</span>
+                    <span class="feature-tag">Input Validation</span>
+                </div>
+                
+                <a href="activity1-demo.html" class="btn">🚀 Live Demo</a>
+                <a href="https://github.com/FCHEHIDI/SafeVault/tree/main/Activities/Activity1_SecureAudit" class="btn btn-secondary">📚 Source Code</a>
+            </div>
+
+            <div class="activity-card activity2">
+                <h2>🔐 Activity 2: Authentication</h2>
+                <p>Master authentication security, session management, multi-factor authentication, and role-based access control.</p>
+                
+                <div class="features">
+                    <span class="feature-tag">Session Security</span>
+                    <span class="feature-tag">MFA</span>
+                    <span class="feature-tag">Password Hashing</span>
+                    <span class="feature-tag">Authorization</span>
+                </div>
+                
+                <a href="activity2-demo.html" class="btn">🚀 Live Demo</a>
+                <a href="https://github.com/FCHEHIDI/SafeVault/tree/main/Activities/Activity2_Authentication" class="btn btn-secondary">📚 Source Code</a>
+            </div>
+
+            <div class="activity-card activity3">
+                <h2>⚡ Activity 3: Advanced Security</h2>
+                <p>Explore advanced topics: XSS prevention, CSRF protection, secure cryptography, file upload security, and security headers.</p>
+                
+                <div class="features">
+                    <span class="feature-tag">XSS Prevention</span>
+                    <span class="feature-tag">CSRF Protection</span>
+                    <span class="feature-tag">Cryptography</span>
+                    <span class="feature-tag">File Upload</span>
+                </div>
+                
+                <a href="activity3-demo.html" class="btn">🚀 Live Demo</a>
+                <a href="https://github.com/FCHEHIDI/SafeVault/tree/main/Activities/Activity3_AdvancedSecurity" class="btn btn-secondary">📚 Source Code</a>
+            </div>
+
+            <div class="activity-card activity4">
+                <h2>🐛 Activity 4: Debugging Vulnerabilities</h2>
+                <p>Use GitHub Copilot to identify and fix security vulnerabilities with comprehensive testing and validation.</p>
+                
+                <div class="features">
+                    <span class="feature-tag">AI-Assisted</span>
+                    <span class="feature-tag">Vulnerability Detection</span>
+                    <span class="feature-tag">Security Testing</span>
+                    <span class="feature-tag">Code Review</span>
+                </div>
+                
+                <a href="activity4-demo.html" class="btn">🚀 Live Demo</a>
+                <a href="https://github.com/FCHEHIDI/SafeVault/tree/main/Activities/Activity4_DebuggingVulnerabilities" class="btn btn-secondary">📚 Source Code</a>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>🌐 Interactive Web Demos</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 30px;">
+                Experience security vulnerabilities and their fixes through interactive web demonstrations
+            </p>
+            
+            <div style="text-align: center;">
+                <a href="web-security-demo.html" class="btn" style="font-size: 1.1rem; padding: 15px 30px;">
+                    🚀 Launch Web Security Demo
+                </a>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>📖 Learning Resources</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div>
+                    <h3 style="color: #2c3e50; margin-bottom: 10px;">📚 Documentation</h3>
+                    <p><a href="https://github.com/FCHEHIDI/SafeVault/blob/main/README.md" class="btn">Project README</a></p>
+                    <p><a href="https://github.com/FCHEHIDI/SafeVault/blob/main/QUICKSTART.md" class="btn">Quick Start Guide</a></p>
+                </div>
+                <div>
+                    <h3 style="color: #2c3e50; margin-bottom: 10px;">🔧 Setup</h3>
+                    <p><a href="https://github.com/FCHEHIDI/SafeVault" class="btn">GitHub Repository</a></p>
+                    <p><a href="https://github.com/FCHEHIDI/SafeVault/releases" class="btn">Download Releases</a></p>
+                </div>
+                <div>
+                    <h3 style="color: #2c3e50; margin-bottom: 10px;">🛡️ Security Framework</h3>
+                    <p><a href="https://github.com/FCHEHIDI/SafeVault/blob/main/Activities/Activity4_DebuggingVulnerabilities/LinearSecurityFramework.md" class="btn">Security Framework</a></p>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>
+                🛡️ SafeVault - Open Source Cybersecurity Education Platform<br>
+                Created for educational purposes | 
+                <a href="https://github.com/FCHEHIDI/SafeVault">View on GitHub</a> | 
+                <a href="https://github.com/FCHEHIDI">@FCHEHIDI</a>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Add some interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Smooth scrolling for links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // Add loading animation to buttons
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    if (this.href && !this.href.includes('#')) {
+                        this.style.opacity = '0.7';
+                        this.innerHTML = '🔄 Loading...';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeVault - Interactive Web Security Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .navbar .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .navbar h1 {
+            font-size: 1.5rem;
+        }
+        
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        
+        .navbar a:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .demo-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .vulnerable {
+            border-left: 5px solid #dc3545;
+            background: #fff5f5;
+        }
+        
+        .secure {
+            border-left: 5px solid #28a745;
+            background: #f8fff8;
+        }
+        
+        .demo-section h2 {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .vulnerable h2 {
+            color: #dc3545;
+        }
+        
+        .secure h2 {
+            color: #28a745;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        textarea {
+            height: 80px;
+            resize: vertical;
+        }
+        
+        button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+        }
+        
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            background: #f8f9fa;
+            min-height: 50px;
+        }
+        
+        .vulnerable .output {
+            border-color: #dc3545;
+            background: #fff5f5;
+        }
+        
+        .secure .output {
+            border-color: #28a745;
+            background: #f8fff8;
+        }
+        
+        .warning {
+            color: #dc3545;
+            font-weight: bold;
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        
+        .success {
+            color: #155724;
+            font-weight: bold;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        
+        .hint {
+            background: #e7f3ff;
+            border: 1px solid #b8daff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+        
+        .hint strong {
+            color: #0056b3;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            color: #2c3e50;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .tab.active {
+            border-bottom-color: #667eea;
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .attack-demo {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .attack-demo h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        code {
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.9rem;
+            color: #d63384;
+        }
+        
+        @media (max-width: 768px) {
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .navbar .container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <h1>🛡️ SafeVault Web Security Demo</h1>
+            <a href="index.html">← Back to Activities</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1>Interactive Web Security Demonstrations</h1>
+            <p>Experience common web vulnerabilities and their secure implementations</p>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('xss-demo')">XSS Prevention</div>
+            <div class="tab" onclick="showTab('sql-demo')">SQL Injection</div>
+            <div class="tab" onclick="showTab('csrf-demo')">CSRF Protection</div>
+            <div class="tab" onclick="showTab('upload-demo')">File Upload Security</div>
+        </div>
+
+        <!-- XSS Demo -->
+        <div id="xss-demo" class="tab-content active">
+            <div class="demo-grid">
+                <div class="demo-section vulnerable">
+                    <h2>❌ Vulnerable to XSS</h2>
+                    <div class="warning">
+                        ⚠️ This form is vulnerable to Cross-Site Scripting attacks!
+                    </div>
+                    
+                    <div class="attack-demo">
+                        <h3>🎯 Try These XSS Attacks:</h3>
+                        <p><code>&lt;script&gt;alert('XSS!')&lt;/script&gt;</code></p>
+                        <p><code>&lt;img src=x onerror=alert('XSS')&gt;</code></p>
+                        <p><code>&lt;svg onload=alert('XSS')&gt;</code></p>
+                    </div>
+                    
+                    <form id="vulnerableXSSForm">
+                        <div class="form-group">
+                            <label>Your Name:</label>
+                            <input type="text" id="vuln-name" placeholder="Enter your name">
+                        </div>
+                        <div class="form-group">
+                            <label>Comment:</label>
+                            <textarea id="vuln-comment" placeholder="Leave a comment"></textarea>
+                        </div>
+                        <button type="submit">Submit (Unsafe)</button>
+                    </form>
+                    <div class="output" id="vuln-xss-output"></div>
+                </div>
+
+                <div class="demo-section secure">
+                    <h2>✅ Protected from XSS</h2>
+                    <div class="success">
+                        ✅ This form properly sanitizes and validates all input!
+                    </div>
+                    
+                    <div class="hint">
+                        <strong>Security Measures:</strong><br>
+                        • HTML encoding/escaping<br>
+                        • Input validation<br>
+                        • Content Security Policy<br>
+                        • Output sanitization
+                    </div>
+                    
+                    <form id="secureXSSForm">
+                        <div class="form-group">
+                            <label>Your Name:</label>
+                            <input type="text" id="secure-name" placeholder="Enter your name" maxlength="50" pattern="[A-Za-z\s]+">
+                        </div>
+                        <div class="form-group">
+                            <label>Comment:</label>
+                            <textarea id="secure-comment" placeholder="Leave a comment" maxlength="200"></textarea>
+                        </div>
+                        <button type="submit">Submit (Safe)</button>
+                    </form>
+                    <div class="output" id="secure-xss-output"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SQL Injection Demo -->
+        <div id="sql-demo" class="tab-content">
+            <div class="demo-grid">
+                <div class="demo-section vulnerable">
+                    <h2>❌ Vulnerable to SQL Injection</h2>
+                    <div class="warning">
+                        ⚠️ This login form is vulnerable to SQL injection attacks!
+                    </div>
+                    
+                    <div class="attack-demo">
+                        <h3>🎯 Try These SQL Injection Attacks:</h3>
+                        <p><strong>Username:</strong> <code>admin'; --</code></p>
+                        <p><strong>Username:</strong> <code>' OR '1'='1</code></p>
+                        <p><strong>Username:</strong> <code>' UNION SELECT * FROM users --</code></p>
+                    </div>
+                    
+                    <form id="vulnerableSQLForm">
+                        <div class="form-group">
+                            <label>Username:</label>
+                            <input type="text" id="vuln-username" placeholder="Enter username">
+                        </div>
+                        <div class="form-group">
+                            <label>Password:</label>
+                            <input type="password" id="vuln-password" placeholder="Enter password">
+                        </div>
+                        <button type="submit">Login (Unsafe)</button>
+                    </form>
+                    <div class="output" id="vuln-sql-output"></div>
+                </div>
+
+                <div class="demo-section secure">
+                    <h2>✅ Protected from SQL Injection</h2>
+                    <div class="success">
+                        ✅ This form uses parameterized queries and input validation!
+                    </div>
+                    
+                    <div class="hint">
+                        <strong>Security Measures:</strong><br>
+                        • Parameterized queries<br>
+                        • Input validation & sanitization<br>
+                        • Stored procedures<br>
+                        • Principle of least privilege
+                    </div>
+                    
+                    <form id="secureSQLForm">
+                        <div class="form-group">
+                            <label>Username:</label>
+                            <input type="text" id="secure-username" placeholder="Enter username" pattern="[A-Za-z0-9@._-]+" maxlength="50">
+                        </div>
+                        <div class="form-group">
+                            <label>Password:</label>
+                            <input type="password" id="secure-password" placeholder="Enter password" minlength="8">
+                        </div>
+                        <button type="submit">Login (Safe)</button>
+                    </form>
+                    <div class="output" id="secure-sql-output"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CSRF Demo -->
+        <div id="csrf-demo" class="tab-content">
+            <div class="demo-grid">
+                <div class="demo-section vulnerable">
+                    <h2>❌ Vulnerable to CSRF</h2>
+                    <div class="warning">
+                        ⚠️ This form lacks CSRF protection and can be exploited!
+                    </div>
+                    
+                    <div class="attack-demo">
+                        <h3>🎯 CSRF Attack Scenario:</h3>
+                        <p>An attacker could create a malicious website that automatically submits this form when visited, performing actions on behalf of the victim.</p>
+                    </div>
+                    
+                    <form id="vulnerableCSRFForm">
+                        <div class="form-group">
+                            <label>Transfer Amount:</label>
+                            <input type="number" id="vuln-amount" placeholder="$0.00" min="0" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Recipient Account:</label>
+                            <input type="text" id="vuln-recipient" placeholder="Account number">
+                        </div>
+                        <button type="submit">Transfer Money (Unsafe)</button>
+                    </form>
+                    <div class="output" id="vuln-csrf-output"></div>
+                </div>
+
+                <div class="demo-section secure">
+                    <h2>✅ Protected from CSRF</h2>
+                    <div class="success">
+                        ✅ This form includes CSRF token and validation!
+                    </div>
+                    
+                    <div class="hint">
+                        <strong>Security Measures:</strong><br>
+                        • CSRF tokens<br>
+                        • SameSite cookies<br>
+                        • Referer header validation<br>
+                        • Double-submit cookies
+                    </div>
+                    
+                    <form id="secureCSRFForm">
+                        <input type="hidden" id="csrf-token" value="abc123-secure-token-456">
+                        <div class="form-group">
+                            <label>Transfer Amount:</label>
+                            <input type="number" id="secure-amount" placeholder="$0.00" min="0" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Recipient Account:</label>
+                            <input type="text" id="secure-recipient" placeholder="Account number" pattern="[0-9-]+" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Confirmation Password:</label>
+                            <input type="password" id="confirm-password" placeholder="Enter password to confirm" required>
+                        </div>
+                        <button type="submit">Transfer Money (Safe)</button>
+                    </form>
+                    <div class="output" id="secure-csrf-output"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- File Upload Demo -->
+        <div id="upload-demo" class="tab-content">
+            <div class="demo-grid">
+                <div class="demo-section vulnerable">
+                    <h2>❌ Insecure File Upload</h2>
+                    <div class="warning">
+                        ⚠️ This upload form accepts any file type and is vulnerable to attacks!
+                    </div>
+                    
+                    <div class="attack-demo">
+                        <h3>🎯 Malicious File Types to Avoid:</h3>
+                        <p><code>.exe, .php, .jsp, .asp</code> - Executable files</p>
+                        <p><code>../../../malicious.txt</code> - Path traversal</p>
+                        <p>Files with embedded scripts or malware</p>
+                    </div>
+                    
+                    <form id="vulnerableUploadForm">
+                        <div class="form-group">
+                            <label>Upload Any File:</label>
+                            <input type="file" id="vuln-file">
+                        </div>
+                        <button type="submit">Upload (Unsafe)</button>
+                    </form>
+                    <div class="output" id="vuln-upload-output"></div>
+                </div>
+
+                <div class="demo-section secure">
+                    <h2>✅ Secure File Upload</h2>
+                    <div class="success">
+                        ✅ This upload form validates file types, size, and content!
+                    </div>
+                    
+                    <div class="hint">
+                        <strong>Security Measures:</strong><br>
+                        • File type validation<br>
+                        • File size limits<br>
+                        • Virus scanning<br>
+                        • Safe file storage<br>
+                        • Content type verification
+                    </div>
+                    
+                    <form id="secureUploadForm">
+                        <div class="form-group">
+                            <label>Upload Image (JPG, PNG, GIF only):</label>
+                            <input type="file" id="secure-file" accept=".jpg,.jpeg,.png,.gif">
+                            <small>Max size: 5MB</small>
+                        </div>
+                        <button type="submit">Upload (Safe)</button>
+                    </form>
+                    <div class="output" id="secure-upload-output"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function showTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabId).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // XSS Demo Handlers
+        document.getElementById('vulnerableXSSForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('vuln-name').value;
+            const comment = document.getElementById('vuln-comment').value;
+            
+            // Vulnerable: Direct insertion without sanitization
+            document.getElementById('vuln-xss-output').innerHTML = `
+                <h3>💀 Vulnerable Output (XSS Risk!):</h3>
+                <p><strong>Name:</strong> ${name}</p>
+                <p><strong>Comment:</strong> ${comment}</p>
+                <div class="warning">⚠️ Any scripts in the input will execute!</div>
+            `;
+        });
+
+        document.getElementById('secureXSSForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('secure-name').value;
+            const comment = document.getElementById('secure-comment').value;
+            
+            // Validate input
+            if (!/^[A-Za-z\s]+$/.test(name)) {
+                alert('Name can only contain letters and spaces');
+                return;
+            }
+            
+            // Safe: HTML escaped output
+            document.getElementById('secure-xss-output').innerHTML = `
+                <h3>✅ Safe Output (HTML Escaped):</h3>
+                <p><strong>Name:</strong> ${escapeHtml(name)}</p>
+                <p><strong>Comment:</strong> ${escapeHtml(comment)}</p>
+                <div class="success">✅ All input has been properly sanitized!</div>
+            `;
+        });
+
+        // SQL Injection Demo Handlers
+        document.getElementById('vulnerableSQLForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('vuln-username').value;
+            const password = document.getElementById('vuln-password').value;
+            
+            // Simulate vulnerable SQL query
+            const query = `SELECT * FROM users WHERE username = '${username}' AND password = '${password}'`;
+            
+            let result = '';
+            if (username.includes("'") || username.includes('--') || username.includes('OR')) {
+                result = `
+                    <h3>💀 SQL Injection Detected!</h3>
+                    <p><strong>Constructed Query:</strong></p>
+                    <code>${query}</code>
+                    <div class="warning">⚠️ Malicious query executed! Unauthorized access granted!</div>
+                `;
+            } else {
+                result = `
+                    <h3>Query Executed:</h3>
+                    <code>${query}</code>
+                    <p>Login failed: Invalid credentials</p>
+                `;
+            }
+            
+            document.getElementById('vuln-sql-output').innerHTML = result;
+        });
+
+        document.getElementById('secureSQLForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('secure-username').value;
+            const password = document.getElementById('secure-password').value;
+            
+            // Validate input
+            if (!/^[A-Za-z0-9@._-]+$/.test(username)) {
+                alert('Invalid username format');
+                return;
+            }
+            
+            if (password.length < 8) {
+                alert('Password must be at least 8 characters');
+                return;
+            }
+            
+            document.getElementById('secure-sql-output').innerHTML = `
+                <h3>✅ Secure Query Executed</h3>
+                <p><strong>Using Parameterized Query:</strong></p>
+                <code>SELECT * FROM users WHERE username = ? AND password = ?</code>
+                <div class="success">✅ Input validated and parameterized query used!</div>
+                <p>Login result: Credentials validated securely</p>
+            `;
+        });
+
+        // CSRF Demo Handlers
+        document.getElementById('vulnerableCSRFForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const amount = document.getElementById('vuln-amount').value;
+            const recipient = document.getElementById('vuln-recipient').value;
+            
+            document.getElementById('vuln-csrf-output').innerHTML = `
+                <h3>💀 Transfer Executed (No CSRF Protection!)</h3>
+                <p><strong>Amount:</strong> $${amount}</p>
+                <p><strong>Recipient:</strong> ${recipient}</p>
+                <div class="warning">⚠️ This transfer could be initiated by a malicious website!</div>
+            `;
+        });
+
+        document.getElementById('secureCSRFForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const token = document.getElementById('csrf-token').value;
+            const amount = document.getElementById('secure-amount').value;
+            const recipient = document.getElementById('secure-recipient').value;
+            const password = document.getElementById('confirm-password').value;
+            
+            if (!token || token.length < 10) {
+                alert('Invalid CSRF token');
+                return;
+            }
+            
+            if (!password || password.length < 6) {
+                alert('Please enter confirmation password');
+                return;
+            }
+            
+            document.getElementById('secure-csrf-output').innerHTML = `
+                <h3>✅ Transfer Authorized Securely</h3>
+                <p><strong>CSRF Token:</strong> ${token.substring(0, 10)}...</p>
+                <p><strong>Amount:</strong> $${amount}</p>
+                <p><strong>Recipient:</strong> ${recipient}</p>
+                <div class="success">✅ CSRF token validated and password confirmed!</div>
+            `;
+        });
+
+        // File Upload Demo Handlers
+        document.getElementById('vulnerableUploadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const file = document.getElementById('vuln-file').files[0];
+            
+            if (!file) {
+                alert('Please select a file');
+                return;
+            }
+            
+            let warning = '';
+            if (file.name.includes('..') || file.name.includes('/') || file.name.includes('\\')) {
+                warning = '<div class="warning">⚠️ Path traversal attempt detected!</div>';
+            }
+            
+            const dangerousExtensions = ['.exe', '.php', '.jsp', '.asp', '.js', '.html'];
+            const ext = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
+            if (dangerousExtensions.includes(ext)) {
+                warning = '<div class="warning">⚠️ Potentially dangerous file type uploaded!</div>';
+            }
+            
+            document.getElementById('vuln-upload-output').innerHTML = `
+                <h3>💀 File Uploaded (No Validation!)</h3>
+                <p><strong>Filename:</strong> ${file.name}</p>
+                <p><strong>Size:</strong> ${(file.size / 1024).toFixed(2)} KB</p>
+                <p><strong>Type:</strong> ${file.type || 'Unknown'}</p>
+                ${warning}
+            `;
+        });
+
+        document.getElementById('secureUploadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const file = document.getElementById('secure-file').files[0];
+            
+            if (!file) {
+                alert('Please select a file');
+                return;
+            }
+            
+            // File type validation
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            if (!allowedTypes.includes(file.type)) {
+                alert('Only JPG, PNG, and GIF files are allowed');
+                return;
+            }
+            
+            // File size validation (5MB limit)
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            if (file.size > maxSize) {
+                alert('File size exceeds 5MB limit');
+                return;
+            }
+            
+            // Filename validation
+            if (file.name.includes('..') || file.name.includes('/') || file.name.includes('\\')) {
+                alert('Invalid filename');
+                return;
+            }
+            
+            document.getElementById('secure-upload-output').innerHTML = `
+                <h3>✅ File Uploaded Securely</h3>
+                <p><strong>Filename:</strong> ${escapeHtml(file.name)}</p>
+                <p><strong>Size:</strong> ${(file.size / 1024).toFixed(2)} KB</p>
+                <p><strong>Type:</strong> ${file.type}</p>
+                <div class="success">✅ File validated and uploaded to secure location!</div>
+            `;
+        });
+
+        // Utility function for HTML escaping
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('SafeVault Web Security Demo loaded');
+            console.log('Educational purposes only - do not use vulnerable patterns in production!');
+        });
+    </script>
+</body>
+</html>
