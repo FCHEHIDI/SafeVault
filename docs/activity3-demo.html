@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity 3: Advanced Security - SafeVault</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #45b7d1 0%, #2196f3 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .nav {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .nav a {
+            display: inline-block;
+            margin: 0 10px;
+            padding: 10px 20px;
+            background: #45b7d1;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        .nav a:hover {
+            background: #3a9bc1;
+            transform: translateY(-2px);
+        }
+        .section {
+            margin: 30px 0;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #45b7d1;
+            background: #f8f9fa;
+        }
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .code-example {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+        }
+        .vulnerable {
+            border-left-color: #dc3545;
+            background: #fff5f5;
+        }
+        .secure {
+            border-left-color: #28a745;
+            background: #f8fff8;
+        }
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .feature-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #45b7d1;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .demo-section {
+            background: white;
+            border: 2px solid #45b7d1;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 5px 15px rgba(69, 183, 209, 0.2);
+        }
+        .attack-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        .attack-item {
+            background: #fff8e1;
+            border: 2px solid #ffcc02;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .attack-item h4 {
+            color: #f57f17;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚡ Activity 3: Advanced Security</h1>
+            <p>XSS Prevention, CSRF Protection, Cryptography & File Upload Security</p>
+        </div>
+
+        <div class="nav">
+            <a href="index.html">← Back to Home</a>
+            <a href="web-security-demo.html">Interactive Demo</a>
+            <a href="https://github.com/FCHEHIDI/SafeVault/tree/main/Activities/Activity3_AdvancedSecurity">View Source Code</a>
+        </div>
+
+        <div class="section">
+            <h2>📚 Advanced Security Learning Objectives</h2>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <h3>🛡️ XSS Prevention</h3>
+                    <p>Implement comprehensive Cross-Site Scripting protection with output encoding and CSP</p>
+                </div>
+                <div class="feature-item">
+                    <h3>🔒 CSRF Protection</h3>
+                    <p>Secure forms against Cross-Site Request Forgery with tokens and validation</p>
+                </div>
+                <div class="feature-item">
+                    <h3>🔐 Strong Cryptography</h3>
+                    <p>Implement AES-GCM encryption, secure key management, and password hashing</p>
+                </div>
+                <div class="feature-item">
+                    <h3>📁 File Upload Security</h3>
+                    <p>Secure file handling with type validation, size limits, and malware scanning</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎯 Advanced Attack Vectors Covered</h2>
+            <div class="attack-showcase">
+                <div class="attack-item">
+                    <h4>🚨 Cross-Site Scripting (XSS)</h4>
+                    <p><strong>Reflected XSS:</strong> Scripts in URL parameters</p>
+                    <p><strong>Stored XSS:</strong> Persistent scripts in database</p>
+                    <p><strong>DOM-based XSS:</strong> Client-side script manipulation</p>
+                </div>
+                <div class="attack-item">
+                    <h4>🔄 Cross-Site Request Forgery</h4>
+                    <p><strong>State-changing requests:</strong> Unauthorized actions</p>
+                    <p><strong>Session riding:</strong> Exploiting active sessions</p>
+                    <p><strong>JSON CSRF:</strong> API endpoint exploitation</p>
+                </div>
+                <div class="attack-item">
+                    <h4>📂 Insecure Direct Object References</h4>
+                    <p><strong>Parameter manipulation:</strong> Accessing other users' data</p>
+                    <p><strong>Path traversal:</strong> File system access</p>
+                    <p><strong>Privilege escalation:</strong> Unauthorized access levels</p>
+                </div>
+                <div class="attack-item">
+                    <h4>🔓 Weak Cryptography</h4>
+                    <p><strong>Hardcoded keys:</strong> Predictable encryption</p>
+                    <p><strong>Weak algorithms:</strong> Breakable encryption</p>
+                    <p><strong>No salt/IV:</strong> Pattern-based attacks</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section vulnerable">
+            <h2>❌ Vulnerable Advanced Security Example</h2>
+            <div class="warning">
+                <strong>⚠️ Critical Vulnerabilities:</strong> This code demonstrates multiple advanced security flaws - extremely dangerous!
+            </div>
+            <div class="code-example">
+// ❌ VULNERABLE: XSS through unencoded output
+public string DisplayUserComment_Vulnerable(string username, string comment)
+{
+    // DANGEROUS: Direct HTML insertion allows XSS
+    return $"&lt;div&gt;&lt;h3&gt;{username} says:&lt;/h3&gt;&lt;p&gt;{comment}&lt;/p&gt;&lt;/div&gt;";
+}
+
+// ❌ VULNERABLE: CSRF - no token validation
+public string ProcessPasswordChange_Vulnerable(HttpRequest request)
+{
+    string username = request["username"];
+    string newPassword = request["newPassword"];
+    
+    // DANGEROUS: No CSRF protection - any site can trigger this
+    UpdatePassword(username, newPassword);
+    return "Password changed successfully";
+}
+
+// ❌ VULNERABLE: Weak encryption with hardcoded key
+private static readonly string encryptionKey = "MyHardcodedKey123!";
+
+public string EncryptData_Vulnerable(string plaintext)
+{
+    // DANGEROUS: Same input = same output (no IV)
+    using var aes = Aes.Create();
+    aes.Key = Encoding.UTF8.GetBytes(encryptionKey.PadRight(32).Substring(0, 32));
+    aes.Mode = CipherMode.ECB; // WEAK: Electronic Codebook mode
+    
+    var encrypted = aes.EncryptEcb(Encoding.UTF8.GetBytes(plaintext), 
+        PaddingMode.PKCS7);
+    return Convert.ToBase64String(encrypted);
+}
+
+// ❌ VULNERABLE: Insecure file upload
+public string UploadFile_Vulnerable(HttpPostedFile file, string uploadPath)
+{
+    // DANGEROUS: No file type validation
+    // DANGEROUS: Path traversal possible
+    string filename = file.FileName;
+    string fullPath = Path.Combine(uploadPath, filename);
+    
+    file.SaveAs(fullPath); // Can overwrite system files!
+    return $"File uploaded: {filename}";
+}
+
+// Attack examples:
+// XSS: &lt;script&gt;alert('Stolen: ' + document.cookie)&lt;/script&gt;
+// CSRF: Malicious site submits password change form
+// Crypto: Same plaintext always produces same ciphertext
+// Upload: ../../../../Windows/System32/evil.exe
+            </div>
+        </div>
+
+        <div class="section secure">
+            <h2>✅ Secure Advanced Implementation</h2>
+            <div class="success">
+                <strong>✅ Enterprise-Grade Security:</strong> This code implements comprehensive advanced security controls
+            </div>
+            <div class="code-example">
+// ✅ SECURE: XSS prevention with comprehensive encoding
+public string DisplayUserComment_Secure(string username, string comment)
+{
+    // Input validation
+    if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(comment))
+        return string.Empty;
+    
+    if (username.Length > 50 || comment.Length > 1000)
+        return "Input exceeds maximum length";
+    
+    // ✅ HTML encode all output to prevent XSS
+    string safeUsername = WebUtility.HtmlEncode(username);
+    string safeComment = WebUtility.HtmlEncode(comment);
+    
+    // ✅ Additional XSS protection: remove potential JS protocols
+    safeComment = Regex.Replace(safeComment, @"javascript:", "", 
+        RegexOptions.IgnoreCase);
+    
+    return $"&lt;div class='user-comment'&gt;&lt;h3&gt;{safeUsername} says:&lt;/h3&gt;" +
+           $"&lt;p&gt;{safeComment}&lt;/p&gt;&lt;/div&gt;";
+}
+
+// ✅ SECURE: CSRF protection with cryptographically secure tokens
+public class SecureCSRFProtection
+{
+    private readonly ICacheManager cache;
+    private readonly ILogger logger;
+
+    public string GenerateCSRFToken(string sessionId)
+    {
+        // ✅ Cryptographically secure random token
+        var tokenBytes = RandomNumberGenerator.GetBytes(32);
+        string token = Convert.ToBase64String(tokenBytes);
+        
+        // ✅ Store token with expiration (15 minutes)
+        string cacheKey = $"csrf_token_{sessionId}_{token}";
+        cache.Set(cacheKey, DateTime.UtcNow, TimeSpan.FromMinutes(15));
+        
+        return token;
+    }
+
+    public AuthResult ProcessPasswordChange(HttpRequest request, string sessionId)
+    {
+        // ✅ CSRF token validation
+        string submittedToken = request["__RequestVerificationToken"];
+        if (string.IsNullOrEmpty(submittedToken))
+            return new AuthResult { Success = false, Message = "Missing request token" };
+
+        string cacheKey = $"csrf_token_{sessionId}_{submittedToken}";
+        if (!cache.Exists(cacheKey))
+        {
+            logger.LogWarning($"Invalid CSRF token for session: {sessionId}");
+            return new AuthResult { Success = false, Message = "Invalid request token" };
+        }
+
+        // ✅ Validate current password before change
+        string currentPassword = request["currentPassword"];
+        if (!ValidateCurrentPassword(sessionId, currentPassword))
+            return new AuthResult { Success = false, Message = "Current password incorrect" };
+
+        // ✅ Password strength validation
+        string newPassword = request["newPassword"];
+        if (!IsPasswordStrong(newPassword))
+            return new AuthResult { Success = false, Message = "Password doesn't meet requirements" };
+
+        // ✅ Remove used token (prevent replay)
+        cache.Remove(cacheKey);
+        
+        // Process password change
+        UpdatePassword(sessionId, newPassword);
+        logger.LogInfo($"Password changed for session: {sessionId}");
+        
+        return new AuthResult { Success = true, Message = "Password changed successfully" };
+    }
+}
+
+// ✅ SECURE: Strong cryptography with AES-GCM
+public static class SecureCryptography
+{
+    public static EncryptionResult EncryptData(string plaintext, byte[] key)
+    {
+        if (key.Length != 32) // 256-bit key required
+            throw new ArgumentException("Key must be 256 bits (32 bytes)");
+        
+        // ✅ Generate unique nonce for each encryption
+        var nonce = RandomNumberGenerator.GetBytes(12); // 96-bit nonce for GCM
+        var plaintextBytes = Encoding.UTF8.GetBytes(plaintext);
+        var ciphertext = new byte[plaintextBytes.Length];
+        var tag = new byte[16]; // 128-bit authentication tag
+        
+        // ✅ AES-GCM provides both encryption and authentication
+        using var aes = new AesGcm(key);
+        aes.Encrypt(nonce, plaintextBytes, ciphertext, tag);
+        
+        return new EncryptionResult
+        {
+            Ciphertext = Convert.ToBase64String(ciphertext),
+            Nonce = Convert.ToBase64String(nonce),
+            Tag = Convert.ToBase64String(tag),
+            Algorithm = "AES-256-GCM"
+        };
+    }
+
+    public static string DecryptData(EncryptionResult encrypted, byte[] key)
+    {
+        var ciphertext = Convert.FromBase64String(encrypted.Ciphertext);
+        var nonce = Convert.FromBase64String(encrypted.Nonce);
+        var tag = Convert.FromBase64String(encrypted.Tag);
+        var plaintext = new byte[ciphertext.Length];
+        
+        using var aes = new AesGcm(key);
+        aes.Decrypt(nonce, ciphertext, tag, plaintext);
+        
+        return Encoding.UTF8.GetString(plaintext);
+    }
+
+    // ✅ Secure password hashing
+    public static PasswordHash HashPassword(string password)
+    {
+        var salt = RandomNumberGenerator.GetBytes(32);
+        
+        using var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 100000, 
+            HashAlgorithmName.SHA256);
+        
+        return new PasswordHash
+        {
+            Hash = Convert.ToBase64String(pbkdf2.GetBytes(32)),
+            Salt = Convert.ToBase64String(salt),
+            Iterations = 100000,
+            Algorithm = "PBKDF2-SHA256"
+        };
+    }
+}
+
+// ✅ SECURE: File upload with comprehensive validation
+public class SecureFileUpload
+{
+    private readonly string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".pdf", ".docx" };
+    private readonly string[] allowedMimeTypes = { "image/jpeg", "image/png", "application/pdf" };
+    private readonly long maxFileSize = 10 * 1024 * 1024; // 10MB
+
+    public FileUploadResult UploadFile(HttpPostedFile file, string userId, string uploadPath)
+    {
+        // ✅ File existence validation
+        if (file?.ContentLength == 0)
+            return new FileUploadResult { Success = false, Message = "No file provided" };
+
+        // ✅ File size validation
+        if (file.ContentLength > maxFileSize)
+            return new FileUploadResult { Success = false, Message = "File too large" };
+
+        // ✅ File extension validation
+        string extension = Path.GetExtension(file.FileName).ToLower();
+        if (!allowedExtensions.Contains(extension))
+            return new FileUploadResult { Success = false, Message = "File type not allowed" };
+
+        // ✅ MIME type validation
+        if (!allowedMimeTypes.Contains(file.ContentType))
+            return new FileUploadResult { Success = false, Message = "Invalid file format" };
+
+        // ✅ Filename sanitization (prevent path traversal)
+        string safeFileName = SanitizeFileName(file.FileName);
+        
+        // ✅ Generate unique filename to prevent conflicts
+        string uniqueFileName = $"{userId}_{Guid.NewGuid()}_{safeFileName}";
+        
+        // ✅ Validate upload directory (prevent path traversal)
+        string fullPath = Path.Combine(uploadPath, uniqueFileName);
+        if (!fullPath.StartsWith(uploadPath))
+            return new FileUploadResult { Success = false, Message = "Invalid upload path" };
+
+        // ✅ Virus scanning simulation (in production, use real AV)
+        if (ContainsMaliciousContent(file))
+            return new FileUploadResult { Success = false, Message = "File failed security scan" };
+
+        // ✅ Save file securely
+        file.SaveAs(fullPath);
+        
+        // ✅ Log upload activity
+        logger.LogInfo($"File uploaded: {uniqueFileName} by user: {userId}");
+        
+        return new FileUploadResult 
+        { 
+            Success = true, 
+            FileName = uniqueFileName,
+            Message = "File uploaded successfully" 
+        };
+    }
+}
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>🚀 Advanced Security Interactive Demo</h2>
+            <p>Experience advanced security vulnerabilities and their comprehensive protection mechanisms.</p>
+            
+            <div style="text-align: center; margin: 25px 0;">
+                <a href="web-security-demo.html" class="nav" style="display: inline-block; font-size: 1.1rem; padding: 15px 30px;">
+                    ⚡ Launch Advanced Security Demo
+                </a>
+            </div>
+            
+            <p><strong>Advanced Demo Features:</strong></p>
+            <ul>
+                <li><strong>XSS Playground:</strong> Try various XSS payloads and see protection in action</li>
+                <li><strong>CSRF Attack Simulation:</strong> Experience token validation and protection</li>
+                <li><strong>File Upload Testing:</strong> Test malicious file uploads and security controls</li>
+                <li><strong>Cryptography Demo:</strong> Compare weak vs strong encryption methods</li>
+                <li><strong>Security Headers:</strong> See comprehensive security header implementation</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>🛡️ Advanced Security Headers</h2>
+            <div class="code-example">
+// ✅ Comprehensive security headers
+public static void SetSecurityHeaders(HttpResponse response, bool isProduction)
+{
+    // ✅ Content Security Policy - prevents XSS
+    response.Headers.Add("Content-Security-Policy", 
+        "default-src 'self'; script-src 'self' 'unsafe-inline'; " +
+        "style-src 'self' 'unsafe-inline'; img-src 'self' data:; " +
+        "connect-src 'self'; font-src 'self'; object-src 'none'; " +
+        "media-src 'self'; frame-src 'none';");
+    
+    // ✅ Prevent clickjacking
+    response.Headers.Add("X-Frame-Options", "DENY");
+    
+    // ✅ XSS protection
+    response.Headers.Add("X-XSS-Protection", "1; mode=block");
+    
+    // ✅ Prevent MIME sniffing
+    response.Headers.Add("X-Content-Type-Options", "nosniff");
+    
+    // ✅ HTTPS enforcement
+    if (isProduction)
+    {
+        response.Headers.Add("Strict-Transport-Security", 
+            "max-age=31536000; includeSubDomains; preload");
+    }
+    
+    // ✅ Hide server information
+    response.Headers.Remove("Server");
+    response.Headers.Remove("X-Powered-By");
+    response.Headers.Remove("X-AspNet-Version");
+}
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🧪 Advanced Security Testing</h2>
+            <p>The Activity 3 advanced security test suite validates:</p>
+            <ul>
+                <li><strong>XSS Prevention:</strong> Output encoding, CSP effectiveness, DOM manipulation protection</li>
+                <li><strong>CSRF Protection:</strong> Token generation, validation, replay attack prevention</li>
+                <li><strong>Cryptography:</strong> AES-GCM implementation, key management, nonce uniqueness</li>
+                <li><strong>File Upload Security:</strong> Type validation, malware detection, path traversal prevention</li>
+                <li><strong>Security Headers:</strong> Complete header set, configuration validation</li>
+                <li><strong>IDOR Prevention:</strong> Authorization checks, object access validation</li>
+            </ul>
+        </div>
+
+        <div class="nav" style="margin-top: 40px;">
+            <a href="web-security-demo.html">Try Interactive Demo →</a>
+            <a href="activity4-demo.html">Next: Activity 4 →</a>
+        </div>
+    </div>
+</body>
+</html>

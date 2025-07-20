@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity 4: Debugging Vulnerabilities with Copilot - SafeVault</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #96ceb4 0%, #85c9a6 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .nav {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .nav a {
+            display: inline-block;
+            margin: 0 10px;
+            padding: 10px 20px;
+            background: #96ceb4;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        .nav a:hover {
+            background: #85c9a6;
+            transform: translateY(-2px);
+        }
+        .section {
+            margin: 30px 0;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #96ceb4;
+            background: #f8f9fa;
+        }
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .code-example {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+        }
+        .copilot-highlight {
+            background: linear-gradient(45deg, #24292e, #0366d6);
+            color: #f6f8fa;
+            border: 2px solid #0366d6;
+        }
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .feature-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #96ceb4;
+        }
+        .ai-feature {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border-left-color: #667eea;
+        }
+        .ai-feature h3 {
+            color: white;
+        }
+        .workflow-step {
+            background: white;
+            border: 2px solid #96ceb4;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        .workflow-step::before {
+            content: attr(data-step);
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: #96ceb4;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-weight: bold;
+        }
+        .demo-section {
+            background: white;
+            border: 2px solid #96ceb4;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 5px 15px rgba(150, 206, 180, 0.2);
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .copilot-tip {
+            background: linear-gradient(45deg, #0366d6, #005cc5);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            position: relative;
+        }
+        .copilot-tip::before {
+            content: "🤖 Copilot Insight";
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .vulnerability-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        .vuln-item {
+            background: #fff5f5;
+            border: 2px solid #ff6b6b;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .vuln-item h4 {
+            color: #dc3545;
+            margin-bottom: 10px;
+        }
+        .fixed-item {
+            background: #f8fff8;
+            border: 2px solid #28a745;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .fixed-item h4 {
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🐛 Activity 4: Debugging Vulnerabilities with Copilot</h1>
+            <p>AI-Assisted Security Analysis & Vulnerability Resolution</p>
+        </div>
+
+        <div class="nav">
+            <a href="index.html">← Back to Home</a>
+            <a href="web-security-demo.html">Interactive Demo</a>
+            <a href="https://github.com/FCHEHIDI/SafeVault/tree/main/Activities/Activity4_DebuggingVulnerabilities">View Source Code</a>
+        </div>
+
+        <div class="section">
+            <h2>🤖 AI-Enhanced Security Learning</h2>
+            <div class="feature-list">
+                <div class="feature-item ai-feature">
+                    <h3>🔍 Vulnerability Detection</h3>
+                    <p>Use GitHub Copilot to identify security anti-patterns and potential attack vectors</p>
+                </div>
+                <div class="feature-item ai-feature">
+                    <h3>🛠️ Automated Fixes</h3>
+                    <p>Generate secure code alternatives with AI-powered suggestions and best practices</p>
+                </div>
+                <div class="feature-item ai-feature">
+                    <h3>🧪 Test Generation</h3>
+                    <p>Create comprehensive security test suites with AI assistance for thorough validation</p>
+                </div>
+                <div class="feature-item ai-feature">
+                    <h3>📊 Security Analysis</h3>
+                    <p>Leverage AI for code review, threat modeling, and security architecture guidance</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="copilot-tip">
+            GitHub Copilot transforms security learning by providing real-time vulnerability analysis, secure coding suggestions, and comprehensive test generation. This activity demonstrates how AI can accelerate both learning and secure development practices.
+        </div>
+
+        <div class="section">
+            <h2>🔄 AI-Assisted Security Workflow</h2>
+            
+            <div class="workflow-step" data-step="1">
+                <h3>🔍 Vulnerability Discovery</h3>
+                <p><strong>Copilot's Role:</strong> Analyzes code patterns and identifies potential security issues</p>
+                <div class="code-example copilot-highlight">
+// Copilot detects this as a SQL injection vulnerability
+string query = $"SELECT * FROM Users WHERE id = {userId}";
+
+// 🤖 Copilot suggestion appears:
+// "This query is vulnerable to SQL injection. Consider using parameterized queries."
+                </div>
+            </div>
+
+            <div class="workflow-step" data-step="2">
+                <h3>🛠️ Secure Code Generation</h3>
+                <p><strong>Copilot's Role:</strong> Provides context-aware secure alternatives</p>
+                <div class="code-example copilot-highlight">
+// Type: "// Secure SQL query" and Copilot suggests:
+const string query = "SELECT * FROM Users WHERE id = @userId";
+using var command = new SqlCommand(query, connection);
+command.Parameters.AddWithValue("@userId", userId);
+
+// 🤖 Copilot automatically includes parameter validation and error handling
+                </div>
+            </div>
+
+            <div class="workflow-step" data-step="3">
+                <h3>🧪 Test Case Generation</h3>
+                <p><strong>Copilot's Role:</strong> Creates comprehensive security test scenarios</p>
+                <div class="code-example copilot-highlight">
+// Type: "[TestMethod] SQL injection test" and Copilot generates:
+[TestMethod]
+public void TestSQLInjection_ParameterizedQuery_PreventsInjection()
+{
+    // Arrange
+    string maliciousInput = "1; DROP TABLE Users; --";
+    
+    // Act & Assert
+    Assert.ThrowsException&lt;SqlException&gt;(() => 
+        ExecuteQuery_Secure(maliciousInput));
+}
+
+// 🤖 Copilot includes multiple attack vectors and edge cases
+                </div>
+            </div>
+
+            <div class="workflow-step" data-step="4">
+                <h3>📊 Security Validation</h3>
+                <p><strong>Copilot's Role:</strong> Assists in creating comprehensive validation frameworks</p>
+                <div class="code-example copilot-highlight">
+// Copilot helps build security validation pipelines
+public class SecurityTestSuite 
+{
+    // 🤖 Copilot generates complete test methods for:
+    // - Input validation testing
+    // - Authentication bypass attempts  
+    // - Authorization escalation tests
+    // - Cryptographic implementation validation
+    // - Error handling security verification
+}
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎯 Real-World Vulnerability Scenarios</h2>
+            <div class="vulnerability-showcase">
+                <div class="vuln-item">
+                    <h4>🚨 Before: Vulnerable Code</h4>
+                    <p><strong>Issue:</strong> Multiple security flaws detected by Copilot</p>
+                    <ul>
+                        <li>SQL injection through string concatenation</li>
+                        <li>XSS via unencoded output</li>
+                        <li>Missing authentication checks</li>
+                        <li>Weak password storage</li>
+                        <li>No input validation</li>
+                    </ul>
+                </div>
+                <div class="fixed-item">
+                    <h4>✅ After: AI-Enhanced Secure Code</h4>
+                    <p><strong>Resolution:</strong> Copilot-assisted comprehensive security implementation</p>
+                    <ul>
+                        <li>Parameterized queries preventing injection</li>
+                        <li>HTML encoding preventing XSS</li>
+                        <li>Role-based authorization controls</li>
+                        <li>PBKDF2 password hashing</li>
+                        <li>Comprehensive input validation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>🚀 Interactive Copilot Debugging Demo</h2>
+            <p>Experience how GitHub Copilot assists in identifying and fixing security vulnerabilities through interactive examples.</p>
+            
+            <div style="text-align: center; margin: 25px 0;">
+                <a href="web-security-demo.html" class="nav" style="display: inline-block; font-size: 1.1rem; padding: 15px 30px;">
+                    🤖 Launch Copilot Security Demo
+                </a>
+            </div>
+            
+            <p><strong>AI-Assisted Demo Features:</strong></p>
+            <ul>
+                <li><strong>Vulnerability Scanning:</strong> See how Copilot identifies security issues</li>
+                <li><strong>Secure Refactoring:</strong> Watch AI suggest security improvements</li>
+                <li><strong>Test Generation:</strong> Experience automated security test creation</li>
+                <li><strong>Code Review:</strong> AI-powered security code analysis</li>
+                <li><strong>Best Practices:</strong> Copilot recommendations for secure coding</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>📈 Linear Security Framework</h2>
+            <p>Activity 4 includes a comprehensive Linear Security Framework that provides:</p>
+            <div class="code-example">
+📊 SAFEVAULT LINEAR SECURITY FRAMEWORK
+
+🔍 VULNERABILITY ASSESSMENT
+├─ SQL Injection Detection
+├─ XSS Pattern Analysis  
+├─ Authentication Flaws
+├─ Authorization Issues
+└─ Cryptographic Weaknesses
+
+🛠️ AI-ASSISTED REMEDIATION
+├─ Parameterized Queries
+├─ Output Encoding
+├─ Secure Authentication  
+├─ Access Controls
+└─ Strong Cryptography
+
+🧪 AUTOMATED TESTING
+├─ Security Test Generation
+├─ Penetration Test Scenarios
+├─ Vulnerability Validation
+├─ Regression Testing
+└─ Continuous Security Monitoring
+
+📊 SECURITY METRICS
+├─ Code Coverage Analysis
+├─ Vulnerability Density
+├─ Fix Success Rate
+├─ Security Compliance
+└─ Risk Assessment Score
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎓 Copilot Learning Outcomes</h2>
+            <p>After completing Activity 4, learners will understand:</p>
+            
+            <h3>AI-Enhanced Security Skills:</h3>
+            <ul>
+                <li><strong>Vulnerability Pattern Recognition:</strong> How AI identifies security anti-patterns</li>
+                <li><strong>Automated Security Remediation:</strong> Using AI for secure code generation</li>
+                <li><strong>Test-Driven Security:</strong> AI-assisted security test creation</li>
+                <li><strong>Continuous Security:</strong> Integrating AI into security workflows</li>
+            </ul>
+
+            <h3>Technical Competencies:</h3>
+            <ul>
+                <li><strong>SQL Injection Prevention:</strong> Parameterized queries and input validation</li>
+                <li><strong>XSS Protection:</strong> Output encoding and CSP implementation</li>
+                <li><strong>Authentication Security:</strong> Secure session management and MFA</li>
+                <li><strong>Authorization Controls:</strong> Role-based access and privilege management</li>
+                <li><strong>Cryptographic Security:</strong> Strong encryption and key management</li>
+            </ul>
+        </div>
+
+        <div class="copilot-tip">
+            <strong>Pro Tip:</strong> The most powerful aspect of Activity 4 is learning to collaborate with AI for security. Copilot doesn't replace security knowledge—it amplifies it. Understanding both the suggestions and their security rationale is key to becoming an effective AI-assisted security developer.
+        </div>
+
+        <div class="section">
+            <h2>🔧 Copilot Integration Examples</h2>
+            <div class="code-example copilot-highlight">
+// Example 1: Copilot detects and fixes SQL injection
+// User types comment: "// Fix SQL injection vulnerability"
+// Copilot suggests complete secure implementation:
+
+public async Task&lt;User&gt; GetUser_Secure(int userId)
+{
+    const string query = "SELECT Id, Username, Email FROM Users WHERE Id = @userId";
+    
+    using var connection = new SqlConnection(connectionString);
+    using var command = new SqlCommand(query, connection);
+    
+    // 🤖 Copilot adds parameter validation
+    command.Parameters.Add("@userId", SqlDbType.Int).Value = userId;
+    
+    await connection.OpenAsync();
+    // 🤖 Copilot includes proper exception handling
+    using var reader = await command.ExecuteReaderAsync();
+    
+    if (await reader.ReadAsync())
+    {
+        return new User
+        {
+            Id = reader.GetInt32("Id"),
+            Username = reader.GetString("Username"),
+            Email = reader.GetString("Email")
+        };
+    }
+    
+    return null;
+}
+
+// Example 2: Copilot generates comprehensive security tests
+// User types: "[TestMethod] // Test XSS prevention"
+// Copilot creates complete test suite:
+
+[TestMethod]
+[DataRow("&lt;script&gt;alert('XSS')&lt;/script&gt;")]
+[DataRow("&lt;img src=x onerror=alert('XSS')&gt;")]
+[DataRow("javascript:alert('XSS')")]
+public void TestXSSPrevention_OutputEncoding_BlocksScripts(string xssPayload)
+{
+    // 🤖 Copilot generates comprehensive test scenarios
+    string result = DisplayContent_Secure(xssPayload);
+    
+    Assert.IsFalse(result.Contains("&lt;script&gt;"));
+    Assert.IsFalse(result.Contains("javascript:"));
+    Assert.IsFalse(result.Contains("onerror="));
+    
+    // 🤖 Copilot includes positive validation
+    Assert.IsTrue(result.Contains("&amp;lt;script&amp;gt;"));
+}
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🧪 AI-Enhanced Security Testing</h2>
+            <p>Activity 4's comprehensive testing framework includes:</p>
+            <ul>
+                <li><strong>Automated Vulnerability Detection:</strong> AI-powered security issue identification</li>
+                <li><strong>Dynamic Test Generation:</strong> Context-aware security test creation</li>
+                <li><strong>Regression Testing:</strong> Continuous validation of security fixes</li>
+                <li><strong>Performance Impact Analysis:</strong> Security vs performance optimization</li>
+                <li><strong>Compliance Validation:</strong> Automated security standard verification</li>
+            </ul>
+        </div>
+
+        <div class="nav" style="margin-top: 40px;">
+            <a href="web-security-demo.html">Try Interactive Demo →</a>
+            <a href="https://github.com/FCHEHIDI/SafeVault/blob/main/Activities/Activity4_DebuggingVulnerabilities/LinearSecurityFramework.md">View Security Framework →</a>
+        </div>
+    </div>
+</body>
+</html>
