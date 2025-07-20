@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeVault - Security Learning Platform</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔐 SafeVault Security Learning Platform</h1>
+            <p>Interactive cybersecurity education through hands-on testing</p>
+        </header>
+
+        <main>
+            <section class="activity-section">
+                <h2>🛡️ Activity 1: Input Validation Testing</h2>
+                
+                <div class="test-form">
+                    <h3>XSS Prevention Test</h3>
+                    <form id="xssTestForm">
+                        <label for="userInput">Enter test input:</label>
+                        <input type="text" id="userInput" placeholder="Try: &lt;script&gt;alert('XSS')&lt;/script&gt;">
+                        <button type="submit">Test XSS Protection</button>
+                    </form>
+                    <div id="xssResult" class="result"></div>
+                </div>
+
+                <div class="test-form">
+                    <h3>SQL Injection Prevention Test</h3>
+                    <form id="sqlTestForm">
+                        <label for="sqlInput">Database Query Input:</label>
+                        <input type="text" id="sqlInput" placeholder="Try: ' OR '1'='1">
+                        <button type="submit">Test SQL Protection</button>
+                    </form>
+                    <div id="sqlResult" class="result"></div>
+                </div>
+            </section>
+
+            <section class="activity-section">
+                <h2>🔑 Activity 2: Authentication Testing</h2>
+                
+                <div class="test-form">
+                    <h3>Password Strength Checker</h3>
+                    <form id="passwordTestForm">
+                        <label for="passwordInput">Enter password to test:</label>
+                        <input type="password" id="passwordInput" placeholder="Enter password">
+                        <button type="button" onclick="togglePassword()">👁️ Show/Hide</button>
+                        <button type="submit">Check Strength</button>
+                    </form>
+                    <div id="passwordResult" class="result"></div>
+                </div>
+            </section>
+
+            <section class="activity-section">
+                <h2>🚀 Activity 3: Advanced Security Testing</h2>
+                
+                <div class="test-form">
+                    <h3>Security Headers Check</h3>
+                    <button onclick="checkSecurityHeaders()">Analyze Current Page Security</button>
+                    <div id="headersResult" class="result"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="learning-resources">
+                <h3>📚 Learning Resources</h3>
+                <ul>
+                    <li><a href="../Activities/Activity1_SecureAudit/COMPLETION_GUIDE.md">Activity 1 Guide</a></li>
+                    <li><a href="../Activities/Activity2_Authentication/COMPLETION_GUIDE.md">Activity 2 Guide</a></li>
+                    <li><a href="../Activities/Activity3_AdvancedSecurity/COMPLETION_GUIDE.md">Activity 3 Guide</a></li>
+                </ul>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

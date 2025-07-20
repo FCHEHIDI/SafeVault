@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeVault - Secure Web Form Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .vulnerable {
+            border: 2px solid #ff6b6b;
+            background: #ffe0e0;
+        }
+        .secure {
+            border: 2px solid #51cf66;
+            background: #e6ffe6;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .warning {
+            color: #d63384;
+            font-weight: bold;
+        }
+        .safe {
+            color: #198754;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>🔐 SafeVault - Secure Form Implementation</h1>
+        
+        <h2>❌ Vulnerable Form (Educational Only)</h2>
+        <div class="vulnerable">
+            <p class="warning">⚠️ This form demonstrates common vulnerabilities - DO NOT use in production!</p>
+            <form id="vulnerableForm">
+                <label>Name (No validation):</label>
+                <input type="text" id="vuln-name" placeholder="Try: <script>alert('XSS')</script>">
+                
+                <label>Email (No validation):</label>
+                <input type="text" id="vuln-email" placeholder="Try: admin'; DROP TABLE users; --">
+                
+                <label>Comments (No sanitization):</label>
+                <textarea id="vuln-comments" placeholder="Try: javascript:alert('XSS')"></textarea>
+                
+                <button type="submit">Submit Vulnerable Form</button>
+            </form>
+            <div id="vuln-output"></div>
+        </div>
+        
+        <h2>✅ Secure Form Implementation</h2>
+        <div class="secure">
+            <p class="safe">✅ This form implements proper security measures</p>
+            <form id="secureForm">
+                <label>Name (Validated & Sanitized):</label>
+                <input type="text" id="secure-name" maxlength="50" pattern="[A-Za-z\s]+" required>
+                <small>Only letters and spaces allowed</small>
+                
+                <label>Email (Validated):</label>
+                <input type="email" id="secure-email" required>
+                <small>Must be valid email format</small>
+                
+                <label>Comments (Sanitized):</label>
+                <textarea id="secure-comments" maxlength="500" required></textarea>
+                <small>HTML will be escaped for security</small>
+                
+                <input type="hidden" id="csrf-token" value="abc123-secure-token">
+                
+                <button type="submit">Submit Secure Form</button>
+            </form>
+            <div id="secure-output"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Vulnerable form (demonstrates attacks)
+        document.getElementById('vulnerableForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('vuln-name').value;
+            const email = document.getElementById('vuln-email').value;
+            const comments = document.getElementById('vuln-comments').value;
+            
+            // Dangerous: Direct insertion without sanitization
+            document.getElementById('vuln-output').innerHTML = `
+                <h3>⚠️ Vulnerable Output (XSS Risk!):</h3>
+                <p><strong>Name:</strong> ${name}</p>
+                <p><strong>Email:</strong> ${email}</p>
+                <p><strong>Comments:</strong> ${comments}</p>
+                <p class="warning">Notice: Any scripts in the input will execute!</p>
+            `;
+        });
+        
+        // Secure form implementation
+        document.getElementById('secureForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Input validation
+            const name = document.getElementById('secure-name').value;
+            const email = document.getElementById('secure-email').value;
+            const comments = document.getElementById('secure-comments').value;
+            
+            // Server-side validation simulation
+            if (!validateInput(name, email, comments)) {
+                return;
+            }
+            
+            // Safe output with HTML escaping
+            document.getElementById('secure-output').innerHTML = `
+                <h3>✅ Secure Output (HTML Escaped):</h3>
+                <p><strong>Name:</strong> ${escapeHtml(name)}</p>
+                <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+                <p><strong>Comments:</strong> ${escapeHtml(comments)}</p>
+                <p class="safe">All input has been properly sanitized!</p>
+            `;
+        });
+        
+        function validateInput(name, email, comments) {
+            // Name validation
+            if (!/^[A-Za-z\s]+$/.test(name)) {
+                alert('Name can only contain letters and spaces');
+                return false;
+            }
+            
+            // Email validation
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                alert('Please enter a valid email address');
+                return false;
+            }
+            
+            // Comments validation
+            if (comments.length > 500) {
+                alert('Comments must be 500 characters or less');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+# .NET Build outputs
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+*.user
+*.suo
+*.cache
+
+# Visual Studio files
+.vs/
+.vscode/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
+SecurityDemoLogs/
+
+# Temporary files
+*.tmp
+*.temp
+Temp/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# Package manager
+packages/
+node_modules/
+
+# Application specific
+appsettings.json
+connection-strings.txt
