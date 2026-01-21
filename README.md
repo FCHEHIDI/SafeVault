@@ -1,5 +1,7 @@
 # 🔐 SafeVault Security Learning Platform
 
+![SafeVault](safevault.png)
+
 SafeVault is a comprehensive cybersecurity education platform designed to teach secure coding practices through hands-on activities and interactive demonstrations.
 
 ## 🎯 Project Overview
